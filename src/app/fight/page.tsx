@@ -143,13 +143,13 @@ export default function FightPage() {
         }, "right");
     }
 
-    if (notEnough) {
-        return (
-            <div className='centeredContainer'>
-                <p>Not enough fighters — draw more on the Draw page.</p>
-            </div>
-        );
-    }
+    // if (notEnough) {
+    //     return (
+    //         <div className='centeredContainer'>
+    //             <p>Not enough fighters — draw more on the Draw page.</p>
+    //         </div>
+    //     );
+    // }
 
     const leftStats = left ? ratings.get(left.id) : undefined;
     const rightStats = right ? ratings.get(right.id) : undefined;
@@ -157,7 +157,9 @@ export default function FightPage() {
     return (
         <div className="centeredContainer">
             {errorMessage ? (
-                <p style={{ color: "red", marginBottom: "1rem" }}>{errorMessage}</p>
+                <p style={{ color: "red", marginBottom: "1rem" }}>
+                    {/* {errorMessage} */}
+                </p>
             ) : done ? (
                 <p>Run complete — no more challengers.</p>
             ) : (

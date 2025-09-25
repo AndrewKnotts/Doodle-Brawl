@@ -20,11 +20,7 @@ export default function Arena({
     winnerSide?: "left" | "right" | null;
 }) {
     if (!left || !right) {
-        return (
-            <div className={styles.empty}>
-                <p>Not enough fighters. Go draw a few first!</p>
-            </div>
-        );
+        return;
     }
 
     const isLeftWinner = winnerSide === "left";
