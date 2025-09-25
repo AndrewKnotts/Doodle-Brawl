@@ -19,10 +19,52 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid winner/loser ids" }, { status: 400 });
     }
 
-    const K = typeof k === "number" ? k : 32;
+    // Identify requester (IP-based)
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
+      req.headers.get("x-real-ip") ||
+      // @ts-ignore (Node runtime may provide req.ip)
+      (req as any).ip ||
+      "unknown";
+
     const supabase = supabaseServer();
 
-    // 1) fetch current ratings (or init if missing)
+    // ---- A) Daily voting cap per IP
+    const LIMIT_PER_DAY = 50; // tune as desired (or set to poolSize - 1 for “one pass” feel)
+    const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+    const { count: voteCount, error: cntErr } = await supabase
+      .from("fights")
+      .select("*", { count: "exact", head: true })
+      .gte("created_at", since)
+      .eq("ip", ip);
+
+    if (cntErr) throw cntErr;
+    if ((voteCount ?? 0) >= LIMIT_PER_DAY) {
+      return NextResponse.json({ error: "Daily voting limit reached" }, { status: 429 });
+    }
+
+    // ---- B) Duplicate matchup prevention (unordered pair per IP)
+    // Rely on DB unique index: (ip, least(winner_id,loser_id), greatest(winner_id,loser_id))
+    const { error: insFightErr } = await supabase.from("fights").insert({
+      ip,
+      winner_id: winnerId,
+      loser_id: loserId,
+    });
+
+    if (insFightErr) {
+      const msg = String(insFightErr.message || "").toLowerCase();
+      if (msg.includes("unique") || msg.includes("duplicate")) {
+        return NextResponse.json({ error: "You already voted on this matchup" }, { status: 409 });
+      }
+      // some other DB error
+      throw insFightErr;
+    }
+
+    // ---- C) Elo update (server-side source of truth)
+    const K = typeof k === "number" ? k : 32;
+
+    // fetch current ratings (default 1000 if missing)
     const { data: rows, error: selErr } = await supabase
       .from("ratings")
       .select("character_id, rating, wins, losses")
@@ -36,7 +78,6 @@ export async function POST(req: NextRequest) {
     const winner: RatingRow = map.get(winnerId) ?? { character_id: winnerId, rating: 1000, wins: 0, losses: 0 };
     const loser: RatingRow = map.get(loserId) ?? { character_id: loserId, rating: 1000, wins: 0, losses: 0 };
 
-    // 2) apply Elo
     const Ea = expectedScore(winner.rating, loser.rating);
     const Eb = 1 - Ea;
 
@@ -45,7 +86,6 @@ export async function POST(req: NextRequest) {
 
     const now = new Date().toISOString();
 
-    // 3) upsert both rows
     const payload = [
       { character_id: winnerId, rating: winnerNew, wins: winner.wins + 1, losses: winner.losses, updated_at: now },
       { character_id: loserId, rating: loserNew, wins: loser.wins, losses: loser.losses + 1, updated_at: now },
@@ -54,7 +94,6 @@ export async function POST(req: NextRequest) {
     const { error: upErr } = await supabase.from("ratings").upsert(payload);
     if (upErr) throw upErr;
 
-    // 4) return updated ratings
     return NextResponse.json(
       {
         winner: { id: winnerId, rating: winnerNew, wins: winner.wins + 1, losses: winner.losses },
@@ -65,6 +104,6 @@ export async function POST(req: NextRequest) {
     );
   } catch (err: any) {
     console.error("POST /api/fight error:", err);
-    return NextResponse.json({ error: err.message ?? "Server error" }, { status: 500 });
+    return NextResponse.json({ error: err?.message ?? "Server error" }, { status: 500 });
   }
 }

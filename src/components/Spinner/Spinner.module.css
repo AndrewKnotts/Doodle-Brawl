@@ -1,0 +1,26 @@
+.wrap {
+  display: inline-grid;
+  place-items: center;
+}
+
+/* Uses CSS variables for easy theming */
+.spinner {
+  box-sizing: border-box;
+  border: 10px solid color-mix(in srgb, var(--color-text, #fff) 100%, transparent);
+  border-top-color: transparent;
+  border-radius: 80%;
+  animation: spin 0.8s linear infinite;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

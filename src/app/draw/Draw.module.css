@@ -1,0 +1,62 @@
+.drawContent {
+  font-family: var(--font-fun);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
+}
+
+.drawContent h1 {
+  margin: 0;
+  margin-bottom: 1rem;
+  font-size: 3rem;
+}
+
+.savedDoodles {
+  font-family: var(--font-fun);
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 200px;
+  padding: 1rem;
+}
+
+.savedDoodles h2 {
+  font-size: 1.9rem;
+}
+
+.savedDoodles ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding-left: 0;
+  gap: 1rem;
+}
+
+.savedDoodles li {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.doodleSmall {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.3rem;
+}
+
+.savedDoodles li img {
+  height: 100px;
+  width: 100px;
+}
+
+.doodleSmallStats {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 1.3rem;
+}

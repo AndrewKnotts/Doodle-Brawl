@@ -13,9 +13,18 @@ type SavedCharacter = {
     createdAt: string;
 };
 
-export default function DrawCanvas({ onSave, saving }: {
+export default function DrawCanvas({
+    onSave,
+    saving,
+    errorMessage,
+    disabled,
+    onChangeClearError, // NEW: call this when user edits name to hide error
+}: {
     onSave?: (p: { name: string; imageDataUrl: string }) => void;
     saving?: boolean;
+    errorMessage?: string | null;
+    disabled: boolean;
+    onChangeClearError?: () => void;
 }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -26,7 +35,7 @@ export default function DrawCanvas({ onSave, saving }: {
     const CSS_SIZE = 512;
 
     const [brushSize, setBrushSize] = useState<number>(8);
-    const [color, setColor] = useState<string>("ffffff");
+    const [color, setColor] = useState<string>("white");
 
     const [strokes, setStrokes] = useState<Stroke[]>([]);
     const [currentStroke, setCurrentStroke] = useState<Stroke | null>(null);
@@ -194,6 +203,62 @@ export default function DrawCanvas({ onSave, saving }: {
 
     return (
         <div className={styles.wrapper}>
+            {/* toolbar */}
+            <div className={styles.toolbar}>
+                <div className={styles.brushGroup} role="group" aria-label="Brush size">
+                    <button type="button" className={brushSize === 4 ? styles.activeBtn : ""} onClick={() => setBrushSize(4)}>
+                        <img className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" />
+                    </button>
+                    <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
+                        <img className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" />
+                    </button>
+                    <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
+                        <img className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" />
+                    </button>
+                </div>
+
+                <div className={styles.colors}>
+                    <button
+                        type="button"
+                        aria-label="Accent brush"
+                        className={`${styles.colorBtn} ${color === "#71f37aff" ? styles.colorActive : ""}`}
+                        onClick={(e) => setColor("#71f37aff")}
+                        style={{ backgroundColor: "#71f37aff" }}
+                    ></button>
+                    <button
+                        type="button"
+                        aria-label="Accent brush"
+                        className={`${styles.colorBtn} ${color === "#f37171ff" ? styles.colorActive : ""}`}
+                        onClick={(e) => setColor("#f37171ff")}
+                        style={{ backgroundColor: "#f37171ff" }}
+                    ></button>
+                    <button
+                        type="button"
+                        aria-label="Accent brush"
+                        className={`${styles.colorBtn} ${color === "#797bebff" ? styles.colorActive : ""}`}
+                        onClick={(e) => setColor("#797bebff")}
+                        style={{ backgroundColor: "#797bebff" }}
+                    ></button>
+                    <button
+                        type="button"
+                        aria-label="Black brush"
+                        className={`${styles.colorBtn} ${color === "white" ? styles.colorActive : ""}`}
+                        onClick={(e) => setColor("white")}
+                    ></button>
+                </div>
+
+                <div className={styles.undoAndClear}>
+                    <button type="button" onClick={handleUndo} disabled={strokes.length === 0}>
+                        <img className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" />
+                    </button>
+
+                    <button type="button" onClick={clearCanvas}>
+                        <img className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" />
+                    </button>
+                </div>
+            </div>
+
+            {/* canvas*/}
             <div className={styles.canvasShell}>
                 <canvas
                     ref={canvasRef}
@@ -205,59 +270,45 @@ export default function DrawCanvas({ onSave, saving }: {
                     onPointerLeave={onPointerUpOrLeave}
                 />
             </div>
-            {/* Simple toolbar */}
-            <div className={styles.toolbar}>
-                <div className={styles.brushGroup} role="group" aria-label="Brush size">
-                    <button type="button" className={brushSize === 4 ? styles.activeBtn : ""} onClick={() => setBrushSize(4)}>
-                        S
-                    </button>
-                    <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
-                        M
-                    </button>
-                    <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
-                        L
-                    </button>
-                </div>
 
-                <label className={styles.field}>
-                    <span>Color</span>
-                    <button
-                        type="button"
-                        aria-label="Accent brush"
-                        className={`${styles.colorBtnAccent} ${color === "red" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("red")}
-                    ></button>
-                    <button
-                        type="button"
-                        aria-label="Black brush"
-                        className={`${styles.colorBtn} ${color === "black" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("black")}
-                    ></button>
-                </label>
+            {/* name/save */}
+            <div className={styles.nameAndSave}>
 
-                <button type="button" onClick={handleUndo} disabled={strokes.length === 0}>
-                    Undo
-                </button>
+                {errorMessage ? (
+                    <div className={styles.error} role="alert" aria-live="polite">
+                        {errorMessage}
+                    </div>
+                ) : (
+                    <>
 
-                <button type="button" onClick={clearCanvas}>
-                    Clear
-                </button>
-                <div className={styles.actions}>
-                    <input
-                        type="text"
-                        placeholder="Character name"
-                        value={charName}
-                        onChange={(e) => setCharName(e.target.value)}
-                        aria-label="Character name"
-                    />
-                    <button
-                        type="button"
-                        onClick={handleSave}
-                        disabled={!charName.trim() || (strokes.length === 0 && !(currentStroke && currentStroke.points.length)) || saving}
-                    >
-                        {saving ? 'Saving…' : 'Save'}
-                    </button>
-                </div>
+                        <input
+                            className={styles.charName}
+                            type="text"
+                            maxLength={20}
+                            placeholder="Character name"
+                            value={charName}
+                            onChange={(e) => {
+                                setCharName(e.target.value);
+                                onChangeClearError?.();
+                            }} // clear error when typing
+                            aria-label="Character name"
+                        />
+
+                        <button
+                            className={styles.saveBtn}
+                            type="button"
+                            onClick={handleSave}
+                            disabled={
+                                !charName.trim() || (strokes.length === 0 && !(currentStroke && currentStroke.points.length)) || saving
+                            }
+                        >
+                            <img className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" />
+                            {saving ? "Saving…" : "Save"}
+                        </button>
+
+                    </>
+
+                )}
             </div>
         </div>
     );

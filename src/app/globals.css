@@ -1,0 +1,26 @@
+/* globals.css */
+:root {
+  --color-bg: #272a28;
+  --color-text: #f5f5f5;
+  --color-accent: #a0ec49;
+  --radius: 0.75rem;
+  --spacing: 1rem;
+  --font-fun: Indie Flower;
+
+  --canvas-width: 512px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  margin: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

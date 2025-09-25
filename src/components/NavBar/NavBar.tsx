@@ -13,9 +13,9 @@ const NavBar = () => {
 
         <nav className={styles.navBar}>
             <Link className={pathName === '/' ? styles.active : ""} href="/">Home</Link>
-            <Link className={pathName === '/draw' ? styles.active : ""} href="/draw">draw</Link>
-            <Link className={pathName === '/fight' ? styles.active : ""} href="/fight">fight</Link>
-            <Link className={pathName === '/leaderboard' ? styles.active : ""} href="/leaderboard">leaderboard</Link>
+            <Link className={pathName === '/draw' ? styles.active : ""} href="/draw">Draw</Link>
+            <Link className={pathName === '/fight' ? styles.active : ""} href="/fight">Fight</Link>
+            <Link className={pathName === '/leaderboard' ? styles.active : ""} href="/leaderboard">Leaderboard</Link>
         </nav>
 
     );

@@ -1,3 +1,17 @@
+.navBar {
+  position: absolute;
+  display: flex;
+  gap: 2rem;
+  padding: 1rem;
+}
+
+.navBar a {
+  font-family: var(--font-fun);
+  text-decoration: none;
+  color: var(--color-text);
+  font-size: 1.4rem;
+}
+
 .active {
   font-weight: bold;
 }
