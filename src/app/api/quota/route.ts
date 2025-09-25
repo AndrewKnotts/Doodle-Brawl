@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-const SUBMISSION_LIMIT_PER_24H = 5;
+const SUBMISSION_LIMIT_PER_24H = 500;
 
 export async function GET(req: NextRequest) {
   try {
     const ip =
       req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
       req.headers.get("x-real-ip") ||
-      // @ts-ignore
       (req as any).ip ||
       "unknown";
 

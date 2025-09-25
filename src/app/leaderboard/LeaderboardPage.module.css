@@ -1,0 +1,41 @@
+.container {
+  font-family: var(--font-fun);
+}
+
+.container h1 {
+  font-size: 3rem;
+}
+
+.container section {
+}
+
+.container section h2 {
+}
+
+.container section ul {
+  padding: 0;
+}
+
+.container section ul li {
+  padding: 1rem;
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.467);
+}
+
+.rank {
+  font-size: 3rem;
+}
+
+.container section ul li img {
+  width: 150px;
+  height: 150px;
+}
+
+.charDetails {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.2rem;
+}

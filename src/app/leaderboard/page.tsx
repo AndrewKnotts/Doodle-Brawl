@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import styles from "./LeaderboardPage.module.css";
 
 type Row = {
     id: string;
@@ -20,46 +21,50 @@ export default function LeaderboardPage() {
         })();
     }, []);
 
-    const withRatings = rows.map(r => ({
+    const withRatings = rows.map((r) => ({
         ...r,
         r: r.ratings ?? { rating: 1000, wins: 0, losses: 0 },
     }));
-    const sorted = withRatings.sort((a, b) => (b.r.rating - a.r.rating));
+    const sorted = withRatings.sort((a, b) => b.r.rating - a.r.rating);
 
     const top10 = sorted.slice(0, 10);
     const bottom10 = sorted.slice(-10);
 
     return (
-        <div style={{ display: "grid", gap: 16 }}>
+        <div className={styles.container}>
             <h1>Leaderboard</h1>
 
             <section>
-                <h2>Top 10</h2>
-                <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
-                    {top10.map(r => (
-                        <li key={r.id} style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                            <img src={r.image_url} alt={r.name} width={48} height={48} style={{ borderRadius: 8, objectFit: "cover" }} />
-                            <strong style={{ width: 160 }}>{r.name}</strong>
-                            <span>⭐ {r.r.rating}</span>
-                            <span>W{r.r.wins}–L{r.r.losses}</span>
+                <ul>
+                    {top10.map((r, index) => (
+                        <li key={r.id}>
+                            <span className={styles.rank}>#{index + 1}</span>
+                            <img src={r.image_url} alt={r.name} />
+                            <div className={styles.charDetails}>
+                                <strong>{r.name}</strong>
+                                <span>ELO:  {r.r.rating}</span>
+                                <span>
+                                    W {r.r.wins} – L {r.r.losses}
+                                </span>
+                            </div>
                         </li>
                     ))}
                 </ul>
             </section>
 
-            <section>
+            {/* <section>
                 <h2>Bottom 10</h2>
-                <ul style={{ listStyle: "none", padding: 0, display: "grid", gap: 8 }}>
+                <ul>
                     {bottom10.map(r => (
-                        <li key={r.id} style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                            <img src={r.image_url} alt={r.name} width={48} height={48} style={{ borderRadius: 8, objectFit: "cover" }} />
-                            <strong style={{ width: 160 }}>{r.name}</strong>
-                            <span>⭐ {r.r.rating}</span>
+                        <li key={r.id} >
+                            <img src={r.image_url} alt={r.name} width={48} height={48} />
+                            <strong >{r.name}</strong>
+                            <span>{r.r.rating}</span>
                             <span>W{r.r.wins}–L{r.r.losses}</span>
                         </li>
                     ))}
                 </ul>
-            </section>
+            </section> */}
         </div>
     );
 }

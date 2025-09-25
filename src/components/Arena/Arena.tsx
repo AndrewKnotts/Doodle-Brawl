@@ -2,6 +2,7 @@ import FighterCard from "@/components/FighterCard/FighterCard";
 import styles from "./Arena.module.css";
 import { Character } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
+import { div } from "framer-motion/client";
 
 export default function Arena({
     left,
@@ -9,7 +10,7 @@ export default function Arena({
     onLeftWin,
     onRightWin,
     disabled,
-    winnerSide, // "left" | "right" | null
+    winnerSide,
 }: {
     left: Character | null;
     right: Character | null;
@@ -40,48 +41,63 @@ export default function Arena({
     const pulse = { scale: [1, 1.06, 1], transition: { duration: 0.35 } };
 
     return (
-        <div className={styles.grid}>
-            <div className={styles.side}>
-                <AnimatePresence mode="popLayout" initial={false}>
-                    <motion.div
-                        key={left.id} // important for enter/exit
-                        initial="enterLeft"
-                        animate={isLeftWinner ? { ...cardVariants.center, ...pulse } : "center"}
-                        exit="exitLeft"
-                        variants={cardVariants}
-                        transition={{ duration: 0.25 }}
-                        layout
-                    >
-                        <FighterCard c={left} rating={(left as any).rating} wins={(left as any).wins} losses={(left as any).losses} />
-                    </motion.div>
-                </AnimatePresence>
 
-                <button className={styles.winBtn} onClick={onLeftWin} disabled={disabled}>
-                    Left Wins
-                </button>
+
+        <div className={styles.arena}>
+            <h1>Choose the Winner</h1>
+            <div className={styles.grid}>
+                <div className={styles.side}>
+                    <button className={styles.winBtn} onClick={onLeftWin} disabled={disabled}>
+                        <AnimatePresence mode="popLayout" initial={false}>
+                            <motion.div
+                                key={left.id}
+                                initial="enterLeft"
+                                animate={isLeftWinner ? { ...cardVariants.center, ...pulse } : "center"}
+                                exit="exitLeft"
+                                variants={cardVariants}
+                                transition={{ duration: 0.25 }}
+                                layout
+                            >
+                                <FighterCard
+                                    c={left}
+                                    rating={(left as any).rating}
+                                    wins={(left as any).wins}
+                                    losses={(left as any).losses}
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+                    </button>
+                </div>
+
+                <div className={styles.vs} aria-hidden>
+                    VS
+                </div>
+
+                <div className={styles.side}>
+                    <button className={styles.winBtn} onClick={onRightWin} disabled={disabled}>
+                        <AnimatePresence mode="popLayout" initial={false}>
+                            <motion.div
+                                key={right.id}
+                                initial="enterRight"
+                                animate={isRightWinner ? { ...cardVariants.center, ...pulse } : "center"}
+                                exit="exitRight"
+                                variants={cardVariants}
+                                transition={{ duration: 0.25 }}
+                                layout
+                            >
+                                <FighterCard
+                                    c={right}
+                                    rating={(right as any).rating}
+                                    wins={(right as any).wins}
+                                    losses={(right as any).losses}
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+                    </button>
+                </div>
             </div>
 
-            <div className={styles.vs} aria-hidden>VS</div>
-
-            <div className={styles.side}>
-                <AnimatePresence mode="popLayout" initial={false}>
-                    <motion.div
-                        key={right.id}
-                        initial="enterRight"
-                        animate={isRightWinner ? { ...cardVariants.center, ...pulse } : "center"}
-                        exit="exitRight"
-                        variants={cardVariants}
-                        transition={{ duration: 0.25 }}
-                        layout
-                    >
-                        <FighterCard c={right} rating={(right as any).rating} wins={(right as any).wins} losses={(right as any).losses} />
-                    </motion.div>
-                </AnimatePresence>
-
-                <button className={styles.winBtn} onClick={onRightWin} disabled={disabled}>
-                    Right Wins
-                </button>
-            </div>
         </div>
+
     );
 }

@@ -27,8 +27,8 @@ export default function FighterCard({
                 <strong className={styles.name}>{c.name}</strong>
                 {rating != null && (
                     <div className={styles.badges}>
-                        <span title="Rating">⭐ {rating}</span>
-                        <span title="Record">W{wins ?? 0}–L{losses ?? 0}</span>
+                        <span title="Rating">ELO: {rating}</span>
+                        <span title="Record">W {wins ?? 0} – L {losses ?? 0}</span>
                     </div>
                 )}
             </div>

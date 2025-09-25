@@ -1,5 +1,5 @@
 .navBar {
-  position: absolute;
+  position: fixed;
   display: flex;
   gap: 2rem;
   padding: 1rem;

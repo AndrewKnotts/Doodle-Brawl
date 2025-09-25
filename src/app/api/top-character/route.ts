@@ -1,4 +1,3 @@
-// src/app/api/top-character/route.ts
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -6,7 +5,6 @@ export async function GET() {
   try {
     const supabase = supabaseServer();
 
-    // join ratings; order by rating desc; first visible character
     const { data, error } = await supabase
       .from("characters")
       .select("id, name, image_url, created_at, ratings (rating, wins, losses)")

@@ -18,7 +18,7 @@ export default function DrawCanvas({
     saving,
     errorMessage,
     disabled,
-    onChangeClearError, // NEW: call this when user edits name to hide error
+    onChangeClearError,
 }: {
     onSave?: (p: { name: string; imageDataUrl: string }) => void;
     saving?: boolean;
@@ -46,31 +46,24 @@ export default function DrawCanvas({
         const canvas = canvasRef.current;
         if (!canvas) return;
 
-        //set size
         canvas.style.width = `${CSS_SIZE}px`;
         canvas.style.height = `${CSS_SIZE}px`;
 
-        //set actual pixel buffer
         const dpr = Math.max(window.devicePixelRatio || 1, 1);
         canvas.width = Math.floor(CSS_SIZE * dpr);
         canvas.height = Math.floor(CSS_SIZE * dpr);
 
-        // get 2D context and scale so drawing uses CSS pixels
         const context = canvas.getContext("2d");
         if (!context) return;
 
-        //awlays reset transform before scaling
         context.setTransform(1, 0, 0, 1, 0, 0);
         context.scale(dpr, dpr);
 
-        // round lines look nicer for a drawing app
         context.lineJoin = "round";
         context.lineCap = "round";
 
-        // keep reference
         ctxRef.current = context;
 
-        // clear on init
         context.clearRect(0, 0, CSS_SIZE, CSS_SIZE);
     }, []);
 
@@ -86,7 +79,6 @@ export default function DrawCanvas({
         const drawOne = (s: Stroke) => {
             if (s.points.length === 0) return;
             if (s.points.length === 1) {
-                // single click = dot
                 const p = s.points[0];
                 ctx.fillStyle = s.color;
                 ctx.beginPath();
@@ -123,7 +115,6 @@ export default function DrawCanvas({
         const newStroke: Stroke = { color, width: brushSize, points: [p] };
         setCurrentStroke(newStroke);
 
-        // show initial dot immediately
         redraw(ctx, strokes, newStroke);
     }
 
@@ -206,13 +197,13 @@ export default function DrawCanvas({
             {/* toolbar */}
             <div className={styles.toolbar}>
                 <div className={styles.brushGroup} role="group" aria-label="Brush size">
-                    <button type="button" className={brushSize === 4 ? styles.activeBtn : ""} onClick={() => setBrushSize(4)}>
+                    <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
                         <img className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" />
                     </button>
-                    <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
+                    <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
                         <img className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" />
                     </button>
-                    <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
+                    <button type="button" className={brushSize === 32 ? styles.activeBtn : ""} onClick={() => setBrushSize(32)}>
                         <img className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" />
                     </button>
                 </div>

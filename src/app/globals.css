@@ -24,3 +24,14 @@ main {
   align-items: center;
   width: 100%;
 }
+
+.centeredContainer {
+  font-family: var(--font-fun);
+  font-size: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
+}

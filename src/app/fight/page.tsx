@@ -21,10 +21,11 @@ export default function FightPage() {
     const [right, setRight] = useState<Character | null>(null);
     const [queue, setQueue] = useState<Character[]>([]);
     const [done, setDone] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
 
     const [ratings, setRatings] = useState<Map<string, RatingRow>>(new Map());
 
-    // NEW
     const [isAnimating, setIsAnimating] = useState(false);
     const [winnerSide, setWinnerSide] = useState<"left" | "right" | null>(null);
     useEffect(() => {
@@ -47,7 +48,6 @@ export default function FightPage() {
                 imageUrl: r.image_url,
             }));
 
-            // seed ratings map from server values if present; else 1000
             setRatings(() => {
                 const m = new Map<string, { rating: number; wins: number; losses: number }>();
                 for (const r of rows) {
@@ -57,7 +57,6 @@ export default function FightPage() {
                 return m;
             });
 
-            // shuffle & queue like before
             const shuffled = shuffle(pool);
             const [a, b, ...rest] = shuffled;
             setPool(shuffled);
@@ -85,7 +84,7 @@ export default function FightPage() {
         });
         if (!res.ok) {
             const msg = await res.json().catch(() => ({}));
-            console.error("Fight API error:", msg);
+            setErrorMessage(msg.error || "Something went wrong.");
             return;
         }
         const data = await res.json();
@@ -106,11 +105,9 @@ export default function FightPage() {
         });
     }
 
-    // NEW: wrap the rotation with a short animation window
     function animateAndRotate(doRotate: () => void, side: "left" | "right") {
         setIsAnimating(true);
         setWinnerSide(side);
-        // Let the pulse play ~300ms, then rotate
         setTimeout(() => {
             doRotate();
             setWinnerSide(null);
@@ -148,8 +145,7 @@ export default function FightPage() {
 
     if (notEnough) {
         return (
-            <div style={{ display: "grid", gap: "1rem" }}>
-                <h1>Fight</h1>
+            <div className='centeredContainer'>
                 <p>Not enough fighters — draw more on the Draw page.</p>
             </div>
         );
@@ -159,11 +155,11 @@ export default function FightPage() {
     const rightStats = right ? ratings.get(right.id) : undefined;
 
     return (
-        <div style={{ display: "grid", gap: "1rem" }}>
-            <h1>Fight</h1>
-
-            {done ? (
-                <p>Run complete — no more challengers. 🎉</p>
+        <div className="centeredContainer">
+            {errorMessage ? (
+                <p style={{ color: "red", marginBottom: "1rem" }}>{errorMessage}</p>
+            ) : done ? (
+                <p>Run complete — no more challengers.</p>
             ) : (
                 <Arena
                     left={left ? ({ ...left, ...(leftStats ?? {}) } as any) : null}
