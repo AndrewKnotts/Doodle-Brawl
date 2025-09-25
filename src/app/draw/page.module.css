@@ -1,0 +1,36 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.gallery {
+  margin-top: 1rem;
+}
+.gallery ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.card {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #0b0b0b;
+}
+.card img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #222;
+}
+.meta {
+  color: #9ca3af;
+  font-size: 12px;
+}

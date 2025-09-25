@@ -1,0 +1,37 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.side {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.vs {
+  font-weight: 800;
+  font-size: 28px;
+  padding: 0 0.5rem;
+  opacity: 0.8;
+}
+
+.winBtn {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+}
+.winBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.empty {
+  padding: 1rem;
+  border: 1px dashed #444;
+  border-radius: 10px;
+  text-align: center;
+  color: #bbb;
+}
