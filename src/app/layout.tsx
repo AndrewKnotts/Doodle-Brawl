@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter, Indie_Flower, Sour_Gummy } from "next/font/google";
 
 import NavBar from "@/components/NavBar/NavBar";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 const indieFlower = Indie_Flower({
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header>
           <NavBar />
         </header>
-        <Toaster position="top-right" />
+        {/* <Toaster position="top-right" /> */}
         <main>{children}</main>
       </body>
     </html>

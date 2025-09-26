@@ -94,11 +94,11 @@ export default function DrawPage() {
                     <p>Nothing saved yet in this session.</p>
                 ) : (
                     <ul>
-                        {saved.map((c) => (
-                            <li key={c.id}>
-                                <img src={c.imageDataUrl} alt={`${c.name} preview`} />
+                        {saved.map((char) => (
+                            <li key={char.id}>
+                                <img src={char.imageDataUrl} alt={`${char.name} preview`} />
                                 <div>
-                                    <strong>{c.name}</strong>
+                                    <strong>{char.name}</strong>
                                 </div>
                             </li>
                         ))}

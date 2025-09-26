@@ -2,9 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Character } from "@/types";
-import { MOCK_CHARACTERS } from "@/lib/mockCharacters";
 import Arena from "@/components/Arena/Arena";
-import { applyElo, ensureRow, RatingRow } from "@/lib/elo";
+import { RatingRow } from "@/lib/elo";
 
 function shuffle<T>(arr: T[]): T[] {
     const a = [...arr];
@@ -42,10 +41,10 @@ export default function FightPage() {
                 ratings?: { rating: number; wins: number; losses: number } | null;
             }[] = await res.json();
 
-            const pool = rows.map((r) => ({
-                id: r.id,
-                name: r.name,
-                imageUrl: r.image_url,
+            const pool = rows.map((char) => ({
+                id: char.id,
+                name: char.name,
+                imageUrl: char.image_url,
             }));
 
             setRatings(() => {
@@ -67,7 +66,7 @@ export default function FightPage() {
         })();
     }, []);
 
-    const notEnough = useMemo(() => pool.length < 2, [pool]);
+    // const notEnough = useMemo(() => pool.length < 2, [pool]);
 
     function nextChallenger(): Character | null {
         if (queue.length === 0) return null;
@@ -164,8 +163,8 @@ export default function FightPage() {
                 <p>Run complete — no more challengers.</p>
             ) : (
                 <Arena
-                    left={left ? ({ ...left, ...(leftStats ?? {}) } as any) : null}
-                    right={right ? ({ ...right, ...(rightStats ?? {}) } as any) : null}
+                    leftChar={left ? ({ ...left, ...(leftStats ?? {}) } as any) : null}
+                    rightChar={right ? ({ ...right, ...(rightStats ?? {}) } as any) : null}
                     onLeftWin={handleLeftWins}
                     onRightWin={handleRightWins}
                     disabled={isAnimating}

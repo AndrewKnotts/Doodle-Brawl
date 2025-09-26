@@ -35,9 +35,9 @@ export default function HomePage() {
     })();
   }, []);
 
-  const normalizedMine = mine.map((r) => ({
-    ...r,
-    r: r.ratings ?? { rating: 1000, wins: 0, losses: 0 },
+  const normalizedMine = mine.map((character) => ({
+    ...character,
+    ratings: character.ratings ?? { rating: 1000, wins: 0, losses: 0 },
   }));
 
   return (
@@ -84,17 +84,17 @@ export default function HomePage() {
         ) : (
           <ul>
             {normalizedMine
-              .sort((a, b) => b.r.rating - a.r.rating)
-              .map((r) => (
-                <li key={r.id}>
+              .sort((a, b) => b.ratings.rating - a.ratings.rating)
+              .map((character) => (
+                <li key={character.id}>
                   <div className={styles.doodleSmall}>
-                    <img src={r.image_url} alt={r.name} />
-                    <strong>{r.name}</strong>
+                    <img src={character.image_url} alt={character.name} />
+                    <strong>{character.name}</strong>
                   </div>
                   <span className={styles.doodleSmallStats}>
-                    <div>ELO: {r.r.rating}</div>
+                    <div>ELO: {character.ratings.rating}</div>
                     <div>
-                      W {r.r.wins} – L {r.r.losses}
+                      W {character.ratings.wins} – L {character.ratings.losses}
                     </div>
                   </span>
                 </li>

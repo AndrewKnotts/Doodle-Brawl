@@ -25,6 +25,7 @@ export default function LeaderboardPage() {
         ...r,
         r: r.ratings ?? { rating: 1000, wins: 0, losses: 0 },
     }));
+
     const sorted = withRatings.sort((a, b) => b.r.rating - a.r.rating);
 
     const top10 = sorted.slice(0, 10);
@@ -36,15 +37,15 @@ export default function LeaderboardPage() {
 
             <section>
                 <ul>
-                    {top10.map((r, index) => (
-                        <li key={r.id}>
+                    {top10.map((char, index) => (
+                        <li key={char.id}>
                             <span className={styles.rank}>#{index + 1}</span>
-                            <img src={r.image_url} alt={r.name} />
+                            <img src={char.image_url} alt={char.name} />
                             <div className={styles.charDetails}>
-                                <strong>{r.name}</strong>
-                                <span>ELO:  {r.r.rating}</span>
+                                <strong>{char.name}</strong>
+                                <span>ELO:  {char.r.rating}</span>
                                 <span>
-                                    W {r.r.wins} – L {r.r.losses}
+                                    W {char.r.wins} – L {char.r.losses}
                                 </span>
                             </div>
                         </li>

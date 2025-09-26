@@ -264,14 +264,12 @@ export default function DrawCanvas({
 
             {/* name/save */}
             <div className={styles.nameAndSave}>
-
                 {errorMessage ? (
                     <div className={styles.error} role="alert" aria-live="polite">
                         {errorMessage}
                     </div>
                 ) : (
                     <>
-
                         <input
                             className={styles.charName}
                             type="text"
@@ -296,9 +294,7 @@ export default function DrawCanvas({
                             <img className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" />
                             {saving ? "Saving…" : "Save"}
                         </button>
-
                     </>
-
                 )}
             </div>
         </div>

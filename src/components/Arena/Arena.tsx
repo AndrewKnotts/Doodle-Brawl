@@ -5,21 +5,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { div } from "framer-motion/client";
 
 export default function Arena({
-    left,
-    right,
+    leftChar,
+    rightChar,
     onLeftWin,
     onRightWin,
     disabled,
     winnerSide,
 }: {
-    left: Character | null;
-    right: Character | null;
+    leftChar: Character | null;
+    rightChar: Character | null;
     onLeftWin: () => void;
     onRightWin: () => void;
     disabled?: boolean;
     winnerSide?: "left" | "right" | null;
 }) {
-    if (!left || !right) {
+    if (!leftChar || !rightChar) {
         return;
     }
 
@@ -46,7 +46,7 @@ export default function Arena({
                     <button className={styles.winBtn} onClick={onLeftWin} disabled={disabled}>
                         <AnimatePresence mode="popLayout" initial={false}>
                             <motion.div
-                                key={left.id}
+                                key={leftChar.id}
                                 initial="enterLeft"
                                 animate={isLeftWinner ? { ...cardVariants.center, ...pulse } : "center"}
                                 exit="exitLeft"
@@ -55,10 +55,10 @@ export default function Arena({
                                 layout
                             >
                                 <FighterCard
-                                    c={left}
-                                    rating={(left as any).rating}
-                                    wins={(left as any).wins}
-                                    losses={(left as any).losses}
+                                    c={leftChar}
+                                    rating={(leftChar as any).rating}
+                                    wins={(leftChar as any).wins}
+                                    losses={(leftChar as any).losses}
                                 />
                             </motion.div>
                         </AnimatePresence>
@@ -73,7 +73,7 @@ export default function Arena({
                     <button className={styles.winBtn} onClick={onRightWin} disabled={disabled}>
                         <AnimatePresence mode="popLayout" initial={false}>
                             <motion.div
-                                key={right.id}
+                                key={rightChar.id}
                                 initial="enterRight"
                                 animate={isRightWinner ? { ...cardVariants.center, ...pulse } : "center"}
                                 exit="exitRight"
@@ -82,10 +82,10 @@ export default function Arena({
                                 layout
                             >
                                 <FighterCard
-                                    c={right}
-                                    rating={(right as any).rating}
-                                    wins={(right as any).wins}
-                                    losses={(right as any).losses}
+                                    c={rightChar}
+                                    rating={(rightChar as any).rating}
+                                    wins={(rightChar as any).wins}
+                                    losses={(rightChar as any).losses}
                                 />
                             </motion.div>
                         </AnimatePresence>
