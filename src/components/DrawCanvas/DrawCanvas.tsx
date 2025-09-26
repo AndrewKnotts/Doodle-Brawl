@@ -2,6 +2,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styles from "./DrawCanvas.module.css";
+import Image from "next/image";
 
 type Point = { x: number; y: number };
 type Stroke = { color: string; width: number; points: Point[] };
@@ -201,13 +202,13 @@ export default function DrawCanvas({
             <div className={styles.toolbar}>
                 <div className={styles.brushGroup} role="group" aria-label="Brush size">
                     <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
-                        <img className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" />
                     </button>
                     <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
-                        <img className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" />
                     </button>
                     <button type="button" className={brushSize === 32 ? styles.activeBtn : ""} onClick={() => setBrushSize(32)}>
-                        <img className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" />
                     </button>
                 </div>
 
@@ -243,11 +244,11 @@ export default function DrawCanvas({
 
                 <div className={styles.undoAndClear}>
                     <button type="button" onClick={handleUndo} disabled={strokes.length === 0}>
-                        <img className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" />
+                        <Image className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" />
                     </button>
 
                     <button type="button" onClick={() => { setClearPromptVisible(true) }}>
-                        <img className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" />
+                        <Image className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" />
                     </button>
                 </div>
             </div>
@@ -264,8 +265,8 @@ export default function DrawCanvas({
                     onPointerLeave={onPointerUpOrLeave}
                 />
                 {clearPromptVisible && <div className={styles.clearCheck}>
-                    <div>Are you sure you want to clear your drawing?</div>
-                    <div>This can't be undone!</div>
+                    <div>{`Are you sure you want to clear your drawing?`}</div>
+                    <div>{`This can't be undone!`}</div>
                     <div>
 
                         <button type="button" onClick={() => { setClearPromptVisible(false) }}>
@@ -312,7 +313,7 @@ export default function DrawCanvas({
                                 !charName.trim() || (strokes.length === 0 && !(currentStroke && currentStroke.points.length)) || saving
                             }
                         >
-                            <img className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" />
+                            <Image className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" />
                             {saving ? "Saving…" : "Save"}
                         </button>
                     </>
