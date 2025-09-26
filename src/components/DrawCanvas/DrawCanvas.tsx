@@ -42,7 +42,7 @@ export default function DrawCanvas({
 
     const [charName, setCharName] = useState("");
 
-    const [clearPromptVisible, setClearPromptVisible] = useState(false);
+    const [clearPromptVisible, setClearPromptVisible] = useState<boolean>(false);
 
     useLayoutEffect(() => {
         const canvas = canvasRef.current;
@@ -263,7 +263,7 @@ export default function DrawCanvas({
                     onPointerUp={onPointerUpOrLeave}
                     onPointerLeave={onPointerUpOrLeave}
                 />
-                {clearPromptVisible ? <div className={styles.clearCheck}>
+                {clearPromptVisible && <div className={styles.clearCheck}>
                     <div>Are you sure you want to clear your drawing?</div>
                     <div>This can't be undone!</div>
                     <div>
@@ -278,8 +278,7 @@ export default function DrawCanvas({
                     </div>
 
                 </div>
-                    :
-                    ""
+
                 }
 
             </div>
