@@ -28,7 +28,7 @@ export default function LeaderboardPage() {
 
     const sorted = withRatings.sort((a, b) => b.r.rating - a.r.rating);
 
-    const top10 = sorted.slice(0, 10);
+    const top10 = sorted.slice(0, 100);
     const bottom10 = sorted.slice(-10);
 
     return (
