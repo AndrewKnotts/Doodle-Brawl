@@ -268,7 +268,7 @@ export default function DrawCanvas({
                     <div>This can't be undone!</div>
                     <div>
 
-                        <button type="button" onClick={clearCanvas}>
+                        <button type="button" onClick={() => { setClearPromptVisible(false) }}>
                             Cancel
                         </button>
                         <button type="button" onClick={clearCanvas}>
