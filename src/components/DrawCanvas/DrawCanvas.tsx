@@ -42,6 +42,8 @@ export default function DrawCanvas({
 
     const [charName, setCharName] = useState("");
 
+    const [clearPromptVisible, setClearPromptVisible] = useState(false);
+
     useLayoutEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -168,6 +170,7 @@ export default function DrawCanvas({
         setStrokes([]);
         setCurrentStroke(null);
         ctx.clearRect(0, 0, CSS_SIZE, CSS_SIZE);
+        setClearPromptVisible(false);
     }
 
     function handleSave() {
@@ -243,7 +246,7 @@ export default function DrawCanvas({
                         <img className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" />
                     </button>
 
-                    <button type="button" onClick={clearCanvas}>
+                    <button type="button" onClick={() => { setClearPromptVisible(true) }}>
                         <img className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" />
                     </button>
                 </div>
@@ -260,6 +263,25 @@ export default function DrawCanvas({
                     onPointerUp={onPointerUpOrLeave}
                     onPointerLeave={onPointerUpOrLeave}
                 />
+                {clearPromptVisible ? <div className={styles.clearCheck}>
+                    <div>Are you sure you want to clear your drawing?</div>
+                    <div>This can't be undone!</div>
+                    <div>
+
+                        <button type="button" onClick={clearCanvas}>
+                            Cancel
+                        </button>
+                        <button type="button" onClick={clearCanvas}>
+                            Clear
+                        </button>
+
+                    </div>
+
+                </div>
+                    :
+                    ""
+                }
+
             </div>
 
             {/* name/save */}
