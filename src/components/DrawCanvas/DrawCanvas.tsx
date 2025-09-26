@@ -5,7 +5,12 @@ import styles from "./DrawCanvas.module.css";
 import Image from "next/image";
 
 type Point = { x: number; y: number };
-type Stroke = { color: string; width: number; points: Point[] };
+type Stroke = {
+    color: string;
+    width: number;
+    points: Point[];
+    mode: "draw" | "erase";
+};
 
 type SavedCharacter = {
     id: string;
@@ -37,6 +42,7 @@ export default function DrawCanvas({
 
     const [brushSize, setBrushSize] = useState<number>(8);
     const [color, setColor] = useState<string>("white");
+    const [tool, setTool] = useState<"brush" | "eraser">("brush");
 
     const [strokes, setStrokes] = useState<Stroke[]>([]);
     const [currentStroke, setCurrentStroke] = useState<Stroke | null>(null);
@@ -81,26 +87,43 @@ export default function DrawCanvas({
 
         const drawOne = (s: Stroke) => {
             if (s.points.length === 0) return;
+
+            ctx.globalCompositeOperation = s.mode === "erase" ? "destination-out" : "source-over";
+
             if (s.points.length === 1) {
                 const p = s.points[0];
                 ctx.fillStyle = s.color;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, s.width / 2, 0, Math.PI * 2);
-                ctx.fill();
+                if (s.mode === "erase") {
+
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = s.color;
+                    ctx.fill();
+                }
                 return;
             }
-            ctx.strokeStyle = s.color;
-            ctx.lineWidth = s.width;
-            ctx.beginPath();
-            ctx.moveTo(s.points[0].x, s.points[0].y);
-            for (let i = 1; i < s.points.length; i++) {
-                ctx.lineTo(s.points[i].x, s.points[i].y);
+            if (s.mode === "erase") {
+                ctx.lineWidth = s.width;
+                ctx.beginPath();
+                ctx.moveTo(s.points[0].x, s.points[0].y);
+                for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
+                ctx.stroke();
+            } else {
+                ctx.strokeStyle = s.color;
+                ctx.lineWidth = s.width;
+                ctx.beginPath();
+                ctx.moveTo(s.points[0].x, s.points[0].y);
+                for (let i = 1; i < s.points.length; i++) ctx.lineTo(s.points[i].x, s.points[i].y);
+                ctx.stroke();
             }
-            ctx.stroke();
         };
 
         for (const s of all) drawOne(s);
         if (inProgress) drawOne(inProgress);
+
+        ctx.globalCompositeOperation = "source-over";
     }
 
     function onPointerDown(e: React.PointerEvent<HTMLCanvasElement>) {
@@ -115,7 +138,7 @@ export default function DrawCanvas({
         const p = getCoords(e);
         lastPointRef.current = p;
 
-        const newStroke: Stroke = { color, width: brushSize, points: [p] };
+        const newStroke: Stroke = { color, width: brushSize, points: [p], mode: tool === "eraser" ? "erase" : "draw", };
         setCurrentStroke(newStroke);
 
         redraw(ctx, strokes, newStroke);
@@ -202,53 +225,61 @@ export default function DrawCanvas({
             <div className={styles.toolbar}>
                 <div className={styles.brushGroup} role="group" aria-label="Brush size">
                     <button type="button" className={brushSize === 8 ? styles.activeBtn : ""} onClick={() => setBrushSize(8)}>
-                        <Image className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_small.png" alt="" aria-hidden="true" width={40} height={40} />
                     </button>
                     <button type="button" className={brushSize === 16 ? styles.activeBtn : ""} onClick={() => setBrushSize(16)}>
-                        <Image className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_medium.png" alt="" aria-hidden="true" width={40} height={40} />
                     </button>
                     <button type="button" className={brushSize === 32 ? styles.activeBtn : ""} onClick={() => setBrushSize(32)}>
-                        <Image className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" />
+                        <Image className={styles.brushIcon} src="/brush_large.png" alt="" aria-hidden="true" width={40} height={40} />
                     </button>
                 </div>
 
                 <div className={styles.colors}>
                     <button
                         type="button"
+                        aria-label="Eraser"
+                        className={`${styles.eraserBtn} ${tool === "eraser" ? styles.colorActive : ""}`}
+                        onClick={() => { setTool("eraser"); setColor("#123456") }}
+                    >
+                        <Image className={styles.btnIcon} src="/eraser.png" alt="" aria-hidden="true" width={40} height={40} />
+                    </button>
+                    <button
+                        type="button"
                         aria-label="Accent brush"
                         className={`${styles.colorBtn} ${color === "#71f37aff" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("#71f37aff")}
+                        onClick={(e) => { setTool("brush"); setColor("#71f37aff") }}
                         style={{ backgroundColor: "#71f37aff" }}
                     ></button>
                     <button
                         type="button"
                         aria-label="Accent brush"
                         className={`${styles.colorBtn} ${color === "#f37171ff" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("#f37171ff")}
+                        onClick={(e) => { setTool("brush"); setColor("#f37171ff") }}
                         style={{ backgroundColor: "#f37171ff" }}
                     ></button>
                     <button
                         type="button"
                         aria-label="Accent brush"
                         className={`${styles.colorBtn} ${color === "#797bebff" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("#797bebff")}
+                        onClick={(e) => { setTool("brush"); setColor("#797bebff") }}
                         style={{ backgroundColor: "#797bebff" }}
                     ></button>
                     <button
                         type="button"
                         aria-label="Black brush"
                         className={`${styles.colorBtn} ${color === "white" ? styles.colorActive : ""}`}
-                        onClick={(e) => setColor("white")}
+                        onClick={(e) => { setTool("brush"); setColor("white") }}
                     ></button>
                 </div>
 
                 <div className={styles.undoAndClear}>
                     <button type="button" onClick={handleUndo} disabled={strokes.length === 0}>
-                        <Image className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" />
+                        <Image className={styles.btnIcon} src="/undo.png" alt="" aria-hidden="true" width={40} height={40} />
                     </button>
 
                     <button type="button" onClick={() => { setClearPromptVisible(true) }}>
-                        <Image className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" />
+                        <Image className={styles.btnIcon} src="/clear.png" alt="" aria-hidden="true" width={40} height={40} />
                     </button>
                 </div>
             </div>
@@ -313,7 +344,7 @@ export default function DrawCanvas({
                                 !charName.trim() || (strokes.length === 0 && !(currentStroke && currentStroke.points.length)) || saving
                             }
                         >
-                            <Image className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" />
+                            <Image className={styles.brushIcon} src="/save.png" alt="" aria-hidden="true" width={40} height={40} />
                             {saving ? "Saving…" : "Save"}
                         </button>
                     </>
