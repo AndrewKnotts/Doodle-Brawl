@@ -62,3 +62,15 @@
   flex-direction: column;
   font-size: 1.3rem;
 }
+
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+  .drawContent h1 {
+    margin: 0;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+
+  .savedDoodles {
+    position: relative;
+  }
+}

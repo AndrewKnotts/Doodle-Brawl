@@ -104,3 +104,66 @@
   flex-direction: column;
   font-size: 1.3rem;
 }
+
+/* iPhone Portrait */
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+  .landingContent {
+    padding: 100px 0px;
+  }
+
+  .landingTitle {
+    font-size: 3rem;
+    font-weight: bold;
+  }
+
+  .homeBtn {
+    width: 60px;
+    font-size: 1.2rem;
+  }
+
+  .btnIcon {
+    height: 50px;
+    width: 50px;
+  }
+
+  .yourDoodles {
+    position: relative;
+    padding: 3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .yourDoodles h2 {
+    font-size: 1.9rem;
+    font-weight: 300;
+  }
+
+  .yourDoodles ul {
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .yourDoodles li {
+    display: flex;
+    flex-direction: column;
+    /* border: 2px solid rgba(255, 255, 255, 0.272); */
+    border-radius: 1rem;
+    padding: 1rem;
+  }
+
+  .doodleSmall {
+    gap: 1rem;
+  }
+
+  .yourDoodles li img {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+/* iPhone Landscape */
+@media screen and (max-device-width: 480px) and (orientation: landscape) {
+}

@@ -39,3 +39,22 @@
   justify-content: center;
   font-size: 1.2rem;
 }
+
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+  .container {
+    padding-top: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .container section ul li {
+    justify-content: space-between;
+    width: calc(100vw - 2rem);
+  }
+
+  .container h1 {
+    font-size: 3rem;
+    padding: 1rem;
+  }
+}

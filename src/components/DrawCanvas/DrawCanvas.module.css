@@ -5,7 +5,7 @@
 
 .toolbar {
   display: flex;
-  width: (--canvas-width);
+  width: var(--canvas-width);
   justify-content: space-between;
   padding-bottom: 01rem;
 }
@@ -98,7 +98,7 @@
 .canvas {
   display: block;
   width: 100%;
-  max-width: (--canvas-width);
+  max-width: var(--canvas-width);
   aspect-ratio: 1 / 1;
   touch-action: none; /* critical for touch drawing */
   background: transparent; /* we fill background in code */
@@ -178,4 +178,26 @@
 .clearCheck button:hover {
   opacity: 0.7;
   cursor: pointer;
+}
+
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
+  .canvasShell {
+    border: 2px solid rgba(255, 255, 255, 0.439);
+    position: relative;
+  }
+
+  .canvas {
+    max-width: var(--canvas-width);
+  }
+
+  .charName {
+    font-size: 2rem;
+  }
+
+  .toolbar {
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
 }

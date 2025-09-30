@@ -3,6 +3,8 @@
 import React, { useLayoutEffect, useRef, useState } from "react";
 import styles from "./DrawCanvas.module.css";
 import Image from "next/image";
+import useMediaQuery from "@/hooks/useMediaQuery";
+
 
 type Point = { x: number; y: number };
 type Stroke = {
@@ -38,7 +40,10 @@ export default function DrawCanvas({
     const isDrawingRef = useRef(false);
     const lastPointRef = useRef<{ x: number; y: number } | null>(null);
 
-    const CSS_SIZE = 512;
+
+
+    const isSmall = useMediaQuery("(max-width: 700px)");
+    const CSS_SIZE = isSmall ? 350 : 512;
 
     const [brushSize, setBrushSize] = useState<number>(8);
     const [color, setColor] = useState<string>("white");
