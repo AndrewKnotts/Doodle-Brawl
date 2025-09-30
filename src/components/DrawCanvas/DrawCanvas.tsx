@@ -79,7 +79,7 @@ export default function DrawCanvas({
         ctxRef.current = context;
 
         context.clearRect(0, 0, CSS_SIZE, CSS_SIZE);
-    }, []);
+    }, [CSS_SIZE]);
 
     //helpers
     function getCoords(e: React.PointerEvent<HTMLCanvasElement>) {

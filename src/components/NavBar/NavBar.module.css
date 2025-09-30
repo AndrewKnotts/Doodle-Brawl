@@ -22,5 +22,6 @@
     gap: 1;
     width: 100vw;
     border-bottom: 2px solid rgba(255, 255, 255, 0.285);
+    z-index: 10;
   }
 }
